@@ -12,6 +12,7 @@ extension Color {
     static let MIDORI = Color("MIDORI")
 }
 
+#if !os(visionOS)
 struct SearchResultsView: View {
     @Binding var goToIndexView: Bool
     @ObservedObject var photoSearcher: PhotoSearcher
@@ -91,7 +92,7 @@ struct SearchResultsView: View {
     }
     
 }
-
+#endif
 
 struct FirstTimeSearchView: View {
     @ObservedObject var photoSearcher: PhotoSearcher
@@ -106,7 +107,10 @@ struct FirstTimeSearchView: View {
             }
             
         }
-        .padding(.top, -UIScreen.main.bounds.height * 0.32)
+        // oh boy, fine ... replacing this with a containerRelative value to avoid
+        // restructuring everything into proper SwiftUI
+        //.padding(.top, -UIScreen.main.bounds.height * 0.32)
+        .padding(.top, -260)
     }
 }
 
@@ -145,7 +149,9 @@ struct Top1PhotoView: View {
                 ProgressView()
             }
         }
-        .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity)
+        // again ...
+        //.frame(maxWidth: UIScreen.main.bounds.width, maxHeight: .infinity)
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
         .ignoresSafeArea()
         .task {
             guard image == nil, let cache = cache else { return }
@@ -262,18 +268,21 @@ struct UpdateIndexView: View {
     }
 }
 
-
+#if !os(visionOS)
 struct SearchResultsView_Previews: PreviewProvider {
     static var previews: some View {
         SearchResultsView(goToIndexView: .constant(false), photoSearcher: PhotoSearcher())
     }
 }
-
+#endif
 
 import UIKit
 
 public extension UIDevice {
     static func chipIsA13OrLater() -> Bool {
+        #if os(visionOS)
+        return true
+        #else
         let devicePattern = /(AppleTV|iPad|iPhone|Watch|iPod)(\d+),(\d+)/
         
         if let match = current.model.firstMatch(of: devicePattern) {
@@ -284,6 +293,7 @@ public extension UIDevice {
         }
 
         return false
+        #endif
     }
     
     static let modelIsValid: Bool = {
@@ -305,7 +315,7 @@ public extension UIDevice {
             case "i386", "x86_64": return false
             default: return false
             }
-            #elseif os(iOS)
+            #elseif os(iOS) || os(visionOS)
             return true
             #endif
         }

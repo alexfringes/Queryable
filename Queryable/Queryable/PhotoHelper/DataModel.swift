@@ -6,6 +6,7 @@ import AVFoundation
 import SwiftUI
 import os.log
 
+#if !os(visionOS)
 final class DataModel: ObservableObject {
 //    let camera = Camera()
     let photoCollection = PhotoCollection(smartAlbum: .smartAlbumUserLibrary)
@@ -139,3 +140,4 @@ fileprivate extension Image.Orientation {
 }
 
 fileprivate let logger = Logger(subsystem: "com.mazzystar.Queryable", category: "DataModel")
+#endif

@@ -81,10 +81,12 @@ struct PhotoView: View {
                                 }
                                 case (-100...100, ...0): do {
                                     print("up swipe")
-                                    
+
+                                    #if !os(visionOS)
                                     let impact = UIImpactFeedbackGenerator(style: .medium)
                                     impact.impactOccurred()
-                                    
+                                    #endif
+
                                     showSimilarImage = true
                                     Task {
                                         await photoSearcher.similarPhoto(with: asset)
@@ -92,10 +94,12 @@ struct PhotoView: View {
                                 }
                                 case (-100...100, 0...):  do {
                                     print("down swipe")
-                                    
+
+                                    #if !os(visionOS)
                                     let impact = UIImpactFeedbackGenerator(style: .medium)
                                     impact.impactOccurred()
-                                    
+                                    #endif
+
                                     if showSimilarImage {
                                         showSimilarImage = false
                                     } else {

@@ -20,11 +20,13 @@ struct ContentView: View {
                         Form {
                             SearchBarView(photoSearcher: photoSearcher)
                         }
+                        #if !os(visionOS)
                         SearchResultsView(goToIndexView: $goToIndexView, photoSearcher: photoSearcher)
+                        #endif
                         Spacer()
                     }
                     
-                case .mac, .unspecified, .tv, .carPlay:
+                case .mac, .unspecified, .tv, .carPlay, .vision:
                     VStack {
                         HStack {
                             Spacer(minLength: 300)
@@ -52,7 +54,9 @@ struct ContentView: View {
                         Form {
                             SearchBarView(photoSearcher: photoSearcher)
                         }
+                        #if !os(visionOS)
                         SearchResultsView(goToIndexView: $goToIndexView, photoSearcher: photoSearcher)
+                        #endif
                         Spacer()
                     }
                 }
